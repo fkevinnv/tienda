@@ -3,277 +3,1281 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Catálogo de Syna World - Streetwear Store. Cortavientos, sudaderas, pantalones, camisetas, conjuntos y colaboraciones.">
   <title>Syna World - Streetwear Store</title>
   <link rel="icon" href="/logo.png" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    :root { --neon-color: #39ff14; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --neon-color: #39ff14;
+      --neon-rgb: 57, 255, 20;
+      --bg-color: #050505;
+      --bg-secondary: #0a0a0a;
+      --card-color: #0d0d0d;
+      --text-color: #d4ffd4;
+      --text-muted: #6b8a6b;
+      --border-subtle: rgba(var(--neon-rgb), 0.12);
+      --font-display: 'Orbitron', sans-serif;
+      --font-mono: 'Share Tech Mono', monospace;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: var(--neon-color) var(--bg-color);
+    }
+
+    html::-webkit-scrollbar { width: 6px; }
+    html::-webkit-scrollbar-track { background: var(--bg-color); }
+    html::-webkit-scrollbar-thumb { background: var(--neon-color); border-radius: 3px; }
+
     body {
-      font-family: 'Orbitron', sans-serif;
-      background-color: #000;
-      color: var(--neon-color);
+      font-family: var(--font-mono);
+      background: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.7;
+      overflow-x: hidden;
     }
 
-    header {
-      background-color: #111;
-      padding: 30px 20px;
-      text-align: center;
-      border-bottom: 2px solid var(--neon-color);
+    body, body * {
+      transition: color 0.6s ease, border-color 0.6s ease,
+                  text-shadow 0.6s ease, box-shadow 0.6s ease;
     }
 
-    header img {
-      width: 120px;
-      margin-bottom: 10px;
+    /* ===== LOADER ===== */
+    .loader-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: var(--bg-color);
+      display: grid;
+      place-items: center;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+    .loader-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    .loader-ring {
+      width: 60px;
+      height: 60px;
+      border: 3px solid transparent;
+      border-top-color: var(--neon-color);
+      border-radius: 50%;
+      animation: loaderSpin 0.8s linear infinite;
+      box-shadow: 0 0 20px rgba(var(--neon-rgb), 0.4);
+      position: relative;
+    }
+    .loader-ring::after {
+      content: '';
+      position: absolute;
+      inset: 6px;
+      border: 2px solid transparent;
+      border-top-color: var(--neon-color);
+      border-radius: 50%;
+      animation: loaderSpin 1.2s linear reverse infinite;
+    }
+    @keyframes loaderSpin { to { transform: rotate(360deg); } }
+
+    /* ===== GRID DE FONDO ===== */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(var(--neon-rgb), 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(var(--neon-rgb), 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
     }
 
-    .volver {
-      text-align: center;
-      margin: 20px;
+    /* ===== NAVEGACIÓN ===== */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 900;
+      background: rgba(5, 5, 5, 0.82);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0 24px;
     }
-
-    .volver a {
-      display: inline-block;
-      padding: 10px 20px;
-      background-color: var(--neon-color);
-      color: #000;
-      font-weight: bold;
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       text-decoration: none;
+      color: var(--neon-color);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+      text-shadow: 0 0 8px rgba(var(--neon-rgb), 0.5);
+      flex-shrink: 0;
+    }
+    .nav-logo img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+    }
+    .nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 8px 18px;
+      border: 1px solid var(--border-subtle);
       border-radius: 8px;
-      box-shadow: 0 0 10px var(--neon-color), 0 0 20px var(--neon-color);
       transition: all 0.3s ease;
     }
-
-    .volver a:hover {
-      background-color: #000;
+    .nav-back:hover,
+    .nav-back:focus-visible {
       color: var(--neon-color);
+      border-color: rgba(var(--neon-rgb), 0.4);
+      background: rgba(var(--neon-rgb), 0.05);
+      box-shadow: 0 0 14px rgba(var(--neon-rgb), 0.08);
+    }
+    .nav-back i {
+      font-size: 0.7rem;
+      transition: transform 0.25s ease;
+    }
+    .nav-back:hover i { transform: translateX(-3px); }
+    .nav-hamburger {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--neon-color);
+      font-size: 1.4rem;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .nav-spacer { flex: 1; }
+
+    /* ===== MOBILE BACK ===== */
+    .mobile-back {
+      display: none;
+      justify-content: center;
+      padding: 14px 16px;
+      position: relative;
+      z-index: 1;
+    }
+    .mobile-back a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 10px 20px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    .mobile-back a:hover {
+      color: var(--neon-color);
+      border-color: rgba(var(--neon-rgb), 0.4);
+      background: rgba(var(--neon-rgb), 0.05);
     }
 
-    .catalogo {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 25px;
-      padding: 40px;
+    /* ===== HEADER / HERO ===== */
+    header {
+      position: relative;
+      z-index: 1;
+      padding: 60px 20px 48px;
+      text-align: center;
+      overflow: hidden;
+    }
+    #hero-canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+    header img.hero-logo {
+      width: 100px;
+      max-width: 100%;
+      margin-bottom: 16px;
+      filter: drop-shadow(0 0 15px rgba(var(--neon-rgb), 0.4));
+    }
+    header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      font-weight: 900;
+      color: var(--neon-color);
+      text-shadow:
+        0 0 10px rgba(var(--neon-rgb), 0.8),
+        0 0 30px rgba(var(--neon-rgb), 0.4),
+        0 0 60px rgba(var(--neon-rgb), 0.15);
+      margin-bottom: 6px;
+      letter-spacing: 2px;
+    }
+    header .hero-sub {
+      font-size: clamp(0.78rem, 1.3vw, 0.95rem);
+      color: var(--text-muted);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+    .hero-line {
+      width: 60px;
+      height: 2px;
+      background: var(--neon-color);
+      margin: 18px auto 0;
+      box-shadow: 0 0 10px rgba(var(--neon-rgb), 0.6);
+      border-radius: 2px;
+    }
+
+    /* ===== FILTROS ===== */
+    .filters-bar {
       max-width: 1300px;
       margin: 0 auto;
+      padding: 28px 20px 0;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .filter-btn {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      padding: 7px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    .filter-btn:hover,
+    .filter-btn:focus-visible {
+      color: var(--neon-color);
+      border-color: rgba(var(--neon-rgb), 0.4);
+      background: rgba(var(--neon-rgb), 0.05);
+    }
+    .filter-btn.active {
+      color: var(--bg-color);
+      background: var(--neon-color);
+      border-color: var(--neon-color);
+      text-shadow: none;
+      box-shadow: 0 0 12px rgba(var(--neon-rgb), 0.3);
     }
 
+    /* ===== SECTION LABEL ===== */
+    .section-label {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 32px 20px 0;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      position: relative;
+      z-index: 1;
+    }
+    .section-label span {
+      font-family: var(--font-display);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--neon-color);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      text-shadow: 0 0 8px rgba(var(--neon-rgb), 0.5);
+      white-space: nowrap;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--border-subtle), transparent);
+    }
+
+    /* ===== CATALOGO INFO ===== */
+    .catalogo-info {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 10px 20px 0;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .catalogo-info span {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+    }
+    .catalogo-info span strong { color: var(--neon-color); }
+
+    /* ===== CATÁLOGO GRID ===== */
+    .catalogo {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 18px;
+      padding: 18px 20px 50px;
+      max-width: 1300px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== PRODUCTO CARD ===== */
     .producto {
-      background-color: #111;
-      border: 2px solid var(--neon-color);
-      border-radius: 15px;
+      background: var(--card-color);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
       overflow: hidden;
-      text-align: center;
-      padding: 10px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      opacity: 0;
+      transform: translateY(30px);
+      transition:
+        opacity 0.5s ease,
+        transform 0.5s ease,
+        box-shadow 0.35s ease,
+        border-color 0.35s ease,
+        color 0.6s ease;
     }
-
+    .producto.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .producto.filtered-out {
+      display: none;
+    }
+    .producto::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      opacity: 0;
+      background: linear-gradient(135deg, rgba(var(--neon-rgb), 0.06) 0%, transparent 60%);
+      transition: opacity 0.35s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
     .producto:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 15px var(--neon-color);
+      border-color: rgba(var(--neon-rgb), 0.5);
+      box-shadow:
+        0 8px 30px rgba(0, 0, 0, 0.5),
+        0 0 20px rgba(var(--neon-rgb), 0.1),
+        inset 0 1px 0 rgba(var(--neon-rgb), 0.1);
+      transform: translateY(-6px);
     }
-
+    .producto.visible:hover { transform: translateY(-6px); }
+    .producto:hover::before { opacity: 1; }
+    .producto .img-wrap {
+      position: relative;
+      overflow: hidden;
+      background: #080808;
+    }
     .producto img {
       width: 100%;
-      height: 200px;
+      height: 190px;
       object-fit: contain;
-      margin-bottom: 10px;
+      display: block;
+      padding: 10px;
+      transition: transform 0.5s ease, filter 0.5s ease;
+    }
+    .producto:hover img {
+      transform: scale(1.05);
+      filter: brightness(1.12);
+    }
+    .producto .card-body {
+      padding: 10px 12px 14px;
+      text-align: left;
+    }
+    .producto .card-model {
+      font-family: var(--font-display);
+      font-size: 0.66rem;
+      font-weight: 700;
+      color: var(--text-color);
+      letter-spacing: 0.5px;
+      line-height: 1.45;
+    }
+    .producto .card-tag {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 0.52rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--neon-color);
+      border: 1px solid rgba(var(--neon-rgb), 0.2);
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(var(--neon-rgb), 0.04);
     }
 
-    .producto h3 {
-      font-size: 1em;
-      margin-bottom: 5px;
-      color: var(--neon-color);
-      text-shadow: 0 0 5px var(--neon-color);
-    }
-
-    .producto p {
-      font-size: 0.85em;
-      color: var(--neon-color);
-    }
-
-    footer {
-      background-color: #111;
-      color: var(--neon-color);
+    /* ===== NO RESULTS ===== */
+    .no-results {
+      grid-column: 1 / -1;
       text-align: center;
-      padding: 20px;
-      font-size: 0.9em;
-      border-top: 2px solid var(--neon-color);
+      padding: 60px 20px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+      display: none;
+    }
+    .no-results.show { display: block; }
+    .no-results i {
+      display: block;
+      font-size: 2rem;
+      margin-bottom: 12px;
+      opacity: 0.4;
     }
 
-    .social a {
-      margin: 0 10px;
-      color: var(--neon-color);
-      text-decoration: none;
-      font-size: 1.2em;
+    /* ===== FOOTER ===== */
+    footer {
+      position: relative;
+      z-index: 1;
+      margin-top: 40px;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-secondary);
     }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+    .footer-brand h3 {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--neon-color);
+      text-shadow: 0 0 8px rgba(var(--neon-rgb), 0.4);
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+    }
+    .footer-brand p {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      line-height: 1.8;
+    }
+    .footer-links h4 {
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .footer-links ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.25s ease;
+    }
+    .footer-links a:hover,
+    .footer-links a:focus-visible { color: var(--neon-color); }
+    .footer-links a i { font-size: 0.9rem; width: 18px; text-align: center; }
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 18px 20px 22px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    /* ===== BOTÓN SUBIR ===== */
     .subir {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background-color: #111;
-      border: 2px solid var(--neon-color);
+      bottom: 24px;
+      right: 24px;
+      background: rgba(13, 13, 13, 0.9);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(var(--neon-rgb), 0.3);
       color: var(--neon-color);
-      font-size: 1.5em;
-      padding: 10px 15px;
-      border-radius: 50%;
+      font-size: 1rem;
+      width: 46px;
+      height: 46px;
+      border-radius: 10px;
       text-decoration: none;
-      text-align: center;
-      box-shadow: 0 0 10px var(--neon-color);
-      transition: transform 0.3s;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s ease, transform 0.3s ease,
+                  border-color 0.3s ease, box-shadow 0.3s ease, color 0.6s ease;
+      z-index: 800;
+      pointer-events: none;
+    }
+    .subir.show { opacity: 1; transform: translateY(0); pointer-events: all; }
+    .subir:hover { border-color: var(--neon-color); box-shadow: 0 0 20px rgba(var(--neon-rgb), 0.25); }
+
+    /* ===== ACCESIBILIDAD ===== */
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid var(--neon-color);
+      outline-offset: 3px;
     }
 
-    .subir:hover {
-      transform: scale(1.2);
+    /* ===== REDUCED MOTION ===== */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+      .producto { opacity: 1; transform: none; }
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .nav-back { display: none; }
+      .nav-hamburger { display: block; }
+      .mobile-back { display: flex !important; }
+      .filters-bar { padding: 20px 12px 0; gap: 6px; }
+      .filter-btn { font-size: 0.62rem; padding: 6px 12px; }
+      .catalogo { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; padding: 14px 12px 36px; }
+      .producto img { height: 160px; padding: 8px; }
+      .producto .card-body { padding: 8px 9px 10px; }
+      .producto .card-model { font-size: 0.58rem; line-height: 1.4; }
+      .producto .card-tag { font-size: 0.48rem; padding: 1px 6px; margin-top: 5px; }
+      .footer-inner { grid-template-columns: 1fr; gap: 28px; padding: 32px 20px 18px; }
+      .footer-bottom { flex-direction: column; gap: 6px; text-align: center; }
+      header { padding: 50px 16px 36px; }
+    }
+    @media (max-width: 400px) {
+      .catalogo { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
-  <script>
-    const neonColors = ['#39ff14', '#00ffff', '#ff003c', '#DBFF42'];
-    const randomColor = neonColors[Math.floor(Math.random() * neonColors.length)];
-    document.documentElement.style.setProperty('--neon-color', randomColor);
-  </script>
 </head>
+
 <body id="inicio">
-<body>
 
-<header>
-  <img src="/img_index/logo_syna.png">
-</header>
-<div class="volver">
-  <a href="/index.html">⬅ Volver al inicio</a>
-</div>
+  <!-- LOADER -->
+  <div class="loader-screen" aria-hidden="true">
+    <div class="loader-ring"></div>
+  </div>
 
-<section class="catalogo">
-  <div class="producto">
-    <img src="/html/img/syna/1.png"><h3>Cortavientos Syna World</h3>
-  </div>
-  <div class="producto">
-    <img src="/html/img/syna/2.png"><h3>Pantalón Syna World</h3>
-  </div>
-  <div class="producto">
-   <img src="/html/img/syna/3.png"><h3>Camiseta Syna World x Nemzz</h3>
-  </div>
- <div class="producto">
- <img src="/html/img/syna/4.png"><h3>Camiseta Syna World Halloween</h3>
-  </div>    
-  <div class="producto">
- <img src="/html/img/syna/5.png"><h3>Camiseta Syna World Negro</h3>
-  </div>
-  <div class="producto">
- <img src="/html/img/syna/6.png"><h3>Cortavientos Syna World Neon</h3>
-  </div>
-    <div class="producto">
- <img src="/html/img/syna/7.png"><h3>Pantalón Syna World Neon</h3>
+  <!-- GRID DE FONDO -->
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <!-- NAVEGACIÓN -->
+  <nav role="navigation" aria-label="Navegación principal">
+    <div class="nav-inner">
+      <a href="/index.html" class="nav-logo">
+        <img src="/logo.png" alt="Logo Streetwear Store">
+        <span>SWS</span>
+      </a>
+      <div class="nav-spacer"></div>
+      <a href="/index.html" class="nav-back">
+        <i class="fa-solid fa-arrow-left"></i>
+        Volver al inicio
+      </a>
+      <button class="nav-hamburger" aria-label="Abrir menú" id="menuBtn">
+        <i class="fa-solid fa-bars"></i>
+      </button>
     </div>
-  <div class="producto">
- <img src="/html/img/syna/8.png"><h3>Cortavientos Syna World Negro</h3>
-</div>
-<div class="producto">
-<img src="/html/img/syna/9.png"><h3>Pantalón Syna World Negro</h3>
+  </nav>
+
+  <!-- BOTÓN VOLVER MOBILE -->
+  <div class="mobile-back">
+    <a href="/index.html">
+      <i class="fa-solid fa-arrow-left"></i>
+      Volver al inicio
+    </a>
   </div>
-  <div class="producto">
-<img src="/html/img/syna/10.png"><h3>Sudadera Syna World Blanco</h3>
+
+  <!-- HERO -->
+  <header>
+    <canvas id="hero-canvas" aria-hidden="true"></canvas>
+    <div class="hero-content">
+      <img class="hero-logo" src="/img_index/logo_syna.png" alt="Logo Syna World">
+      <h1>Syna World</h1>
+      <p class="hero-sub">Cortavientos &middot; Sudaderas &middot; Pantalones &middot; Camisetas &middot; Conjuntos &middot; Colabs &middot; 40 modelos</p>
+      <div class="hero-line" aria-hidden="true"></div>
+    </div>
+  </header>
+
+  <!-- FILTROS -->
+  <div class="filters-bar" role="toolbar" aria-label="Filtrar productos">
+    <button class="filter-btn active" data-filter="todos">Todos</button>
+    <button class="filter-btn" data-filter="camiseta">Camiseta</button>
+    <button class="filter-btn" data-filter="sudadera">Sudadera</button>
+    <button class="filter-btn" data-filter="pantalon">Pantalón</button>
+    <button class="filter-btn" data-filter="windbreaker">Windbreaker</button>
+    <button class="filter-btn" data-filter="conjunto">Conjunto</button>
+    <button class="filter-btn" data-filter="colaboracion">Colabs</button>
   </div>
-   <div class="producto">
-<img src="/html/img/syna/11.png"><h3>Pantalón Syna World Blanco</h3>
+
+  <!-- LABEL -->
+  <div class="section-label">
+    <span>Modelos disponibles</span>
   </div>
-   <div class="producto">
-<img src="/html/img/syna/12.png"><h3>Sudadera Syna World Negro</h3>
+  <div class="catalogo-info">
+    <span><strong id="productCount">40</strong> modelos en catalogo</span>
   </div>
-   <div class="producto">
-<img src="/html/img/syna/13.png"><h3>Pantalón Syna World Negro</h3>
-  </div>
-    <div class="producto">
-<img src="/html/img/syna/14.png"><h3>Sudadera Syna World Azul</h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/syna/15.png"><h3>Sudadera Syna World Negro</h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/syna/16.png"><h3>Camiseta Syna World Tropical</h3>
-  </div>
-   <div class="producto">
-<img src="/html/img/syna/17.png"><h3>Sudadera Syna World Gris</h3>
-  </div>
-   <div class="producto">
-<img src="/html/img/syna/18.png"><h3>Pantalón Syna World Gris</h3>
-  </div>
-   <div class="producto">
-<img src="/html/img/syna/19.png"><h3>Sudadera Syna World Negro</h3>
-  </div>
-   <div class="producto">
-<img src="/html/img/syna/20.png"><h3>Pantalón Syna World Negro</h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/syna/21.png"><h3>Sudadera Syna World Negro</h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/syna/22.png"><h3>Pantalón Syna World Negro</h3>
-  </div>
-   <div class="producto">
-<img src="/html/img/syna/23.png"><h3>Camiseta Syna World Negro</h3>
-  </div>
-   <div class="producto">
-<img src="/html/img/syna/24.png"><h3>Sudadera Syna World Negro</h3>
-  </div>
-   <div class="producto">
-<img src="/html/img/syna/25.png"><h3>Pantalón Syna World Negro</h3>
-  </div>
-   <div class="producto">
-<img src="/html/img/syna/26.png"><h3>Camiseta Syna World Evil</h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/syna/27.png"><h3>Camiseta Syna World Scream Ghostface</h3>
-  </div>
-    <div class="producto">
-<img src="/html/img/syna/28.png"><h3>Camiseta Syna World Phantom Yellow</h3>
-  </div>
-   <div class="producto">
-<img src="/html/img/syna/29.png"><h3>Camiseta Syna World Playboy</h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/syna/30.png"><h3>Camiseta Syna World HotWheels</h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/syna/31.png"><h3>Conjunto Syna World Azul</h3>
-  </div>
-   <div class="producto">
-<img src="/html/img/syna/32.png"><h3>Conjunto Syna World Gris</h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/syna/33.png"><h3>Conjunto Syna World Rojo</h3>
-  </div>
-   <div class="producto">
-<img src="/html/img/syna/34.png"><h3>Conjunto Syna World Gris</h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/syna/35.png"><h3>Conjunto Syna World Rojo 2</h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/syna/36.png"><h3>Conjunto Syna World largo </h3>
-  </div>
-   <div class="producto">
-<img src="/html/img/syna/37.png"><h3>Conjunto Syna World Corto </h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/syna/38.png"><h3>Conjunto Syna World Gris </h3>
-  </div>
-    <div class="producto">
-<img src="/html/img/syna/39.png"><h3>Conjunto Syna World Azul</h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/syna/40.png"><h3>Conjuntos Syna World </h3>
-  </div>
-    <!-- Agrega más productos aquí siguiendo la misma estructura -->
-</section>
-<footer>
-  <p>&copy; 2025 Streetwear Store - Syna World.</p>
-  <div class="social">
-    <a href="https://www.instagram.com/streetwear.store01?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank">Instagram</a>
-    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=streetwearstorex1@gmail.com&su=Consulta%20Streetwear" target="_blank">Contacto</a>
-  </div>
-</footer>
-  <!-- Flecha para subir -->
-  <a href="#inicio" class="subir" title="Volver al inicio">&#8679;</a>
+
+  <!-- CATÁLOGO -->
+  <section class="catalogo" id="catalogo" aria-label="Syna World">
+
+    <!-- WINDBREAKERS -->
+    <article class="producto" data-tags="windbreaker">
+      <div class="img-wrap">
+        <img src="/html/img/syna/1.png" alt="Cortavientos Syna World" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Cortavientos Syna World</p>
+        <span class="card-tag">Windbreaker</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="windbreaker">
+      <div class="img-wrap">
+        <img src="/html/img/syna/6.png" alt="Cortavientos Syna World Neon" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Cortavientos Syna World Neon</p>
+        <span class="card-tag">Windbreaker</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="windbreaker">
+      <div class="img-wrap">
+        <img src="/html/img/syna/8.png" alt="Cortavientos Syna World Negro" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Cortavientos Syna World Negro</p>
+        <span class="card-tag">Windbreaker</span>
+      </div>
+    </article>
+
+    <!-- PANTALONES -->
+    <article class="producto" data-tags="pantalon">
+      <div class="img-wrap">
+        <img src="/html/img/syna/2.png" alt="Pantalón Syna World" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Pantalón Syna World</p>
+        <span class="card-tag">Pantalón</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="pantalon">
+      <div class="img-wrap">
+        <img src="/html/img/syna/7.png" alt="Pantalón Syna World Neon" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Pantalón Syna World Neon</p>
+        <span class="card-tag">Pantalón</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="pantalon">
+      <div class="img-wrap">
+        <img src="/html/img/syna/9.png" alt="Pantalón Syna World Negro" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Pantalón Syna World Negro</p>
+        <span class="card-tag">Pantalón</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="pantalon">
+      <div class="img-wrap">
+        <img src="/html/img/syna/11.png" alt="Pantalón Syna World Blanco" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Pantalón Syna World Blanco</p>
+        <span class="card-tag">Pantalón</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="pantalon">
+      <div class="img-wrap">
+        <img src="/html/img/syna/13.png" alt="Pantalón Syna World Negro" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Pantalón Syna World Negro</p>
+        <span class="card-tag">Pantalón</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="pantalon">
+      <div class="img-wrap">
+        <img src="/html/img/syna/18.png" alt="Pantalón Syna World Gris" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Pantalón Syna World Gris</p>
+        <span class="card-tag">Pantalón</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="pantalon">
+      <div class="img-wrap">
+        <img src="/html/img/syna/20.png" alt="Pantalón Syna World Negro" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Pantalón Syna World Negro</p>
+        <span class="card-tag">Pantalón</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="pantalon">
+      <div class="img-wrap">
+        <img src="/html/img/syna/22.png" alt="Pantalón Syna World Negro" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Pantalón Syna World Negro</p>
+        <span class="card-tag">Pantalón</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="pantalon">
+      <div class="img-wrap">
+        <img src="/html/img/syna/25.png" alt="Pantalón Syna World Negro" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Pantalón Syna World Negro</p>
+        <span class="card-tag">Pantalón</span>
+      </div>
+    </article>
+
+    <!-- CAMISETAS -->
+    <article class="producto" data-tags="camiseta colaboracion">
+      <div class="img-wrap">
+        <img src="/html/img/syna/3.png" alt="Camiseta Syna World x Nemzz" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Camiseta Syna World x Nemzz</p>
+        <span class="card-tag">Colab</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="camiseta">
+      <div class="img-wrap">
+        <img src="/html/img/syna/4.png" alt="Camiseta Syna World Halloween" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Camiseta Syna World Halloween</p>
+        <span class="card-tag">Camiseta</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="camiseta">
+      <div class="img-wrap">
+        <img src="/html/img/syna/5.png" alt="Camiseta Syna World Negro" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Camiseta Syna World Negro</p>
+        <span class="card-tag">Camiseta</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="camiseta">
+      <div class="img-wrap">
+        <img src="/html/img/syna/16.png" alt="Camiseta Syna World Tropical" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Camiseta Syna World Tropical</p>
+        <span class="card-tag">Camiseta</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="camiseta">
+      <div class="img-wrap">
+        <img src="/html/img/syna/23.png" alt="Camiseta Syna World Negro" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Camiseta Syna World Negro</p>
+        <span class="card-tag">Camiseta</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="camiseta colaboracion">
+      <div class="img-wrap">
+        <img src="/html/img/syna/26.png" alt="Camiseta Syna World Evil" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Camiseta Syna World Evil</p>
+        <span class="card-tag">Colab</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="camiseta colaboracion">
+      <div class="img-wrap">
+        <img src="/html/img/syna/27.png" alt="Camiseta Syna World Scream Ghostface" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Camiseta Syna World Ghostface</p>
+        <span class="card-tag">Colab</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="camiseta colaboracion">
+      <div class="img-wrap">
+        <img src="/html/img/syna/28.png" alt="Camiseta Syna World Phantom Yellow" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Camiseta Syna World Phantom</p>
+        <span class="card-tag">Colab</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="camiseta colaboracion">
+      <div class="img-wrap">
+        <img src="/html/img/syna/29.png" alt="Camiseta Syna World Playboy" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Camiseta Syna World Playboy</p>
+        <span class="card-tag">Colab</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="camiseta colaboracion">
+      <div class="img-wrap">
+        <img src="/html/img/syna/30.png" alt="Camiseta Syna World HotWheels" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Camiseta Syna World HotWheels</p>
+        <span class="card-tag">Colab</span>
+      </div>
+    </article>
+
+    <!-- SUDADERAS -->
+    <article class="producto" data-tags="sudadera">
+      <div class="img-wrap">
+        <img src="/html/img/syna/10.png" alt="Sudadera Syna World Blanco" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Sudadera Syna World Blanco</p>
+        <span class="card-tag">Sudadera</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="sudadera">
+      <div class="img-wrap">
+        <img src="/html/img/syna/12.png" alt="Sudadera Syna World Negro" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Sudadera Syna World Negro</p>
+        <span class="card-tag">Sudadera</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="sudadera">
+      <div class="img-wrap">
+        <img src="/html/img/syna/14.png" alt="Sudadera Syna World Azul" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Sudadera Syna World Azul</p>
+        <span class="card-tag">Sudadera</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="sudadera">
+      <div class="img-wrap">
+        <img src="/html/img/syna/15.png" alt="Sudadera Syna World Negro" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Sudadera Syna World Negro</p>
+        <span class="card-tag">Sudadera</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="sudadera">
+      <div class="img-wrap">
+        <img src="/html/img/syna/17.png" alt="Sudadera Syna World Gris" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Sudadera Syna World Gris</p>
+        <span class="card-tag">Sudadera</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="sudadera">
+      <div class="img-wrap">
+        <img src="/html/img/syna/19.png" alt="Sudadera Syna World Negro" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Sudadera Syna World Negro</p>
+        <span class="card-tag">Sudadera</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="sudadera">
+      <div class="img-wrap">
+        <img src="/html/img/syna/21.png" alt="Sudadera Syna World Negro" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Sudadera Syna World Negro</p>
+        <span class="card-tag">Sudadera</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="sudadera">
+      <div class="img-wrap">
+        <img src="/html/img/syna/24.png" alt="Sudadera Syna World Negro" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Sudadera Syna World Negro</p>
+        <span class="card-tag">Sudadera</span>
+      </div>
+    </article>
+
+    <!-- CONJUNTOS -->
+    <article class="producto" data-tags="conjunto">
+      <div class="img-wrap">
+        <img src="/html/img/syna/31.png" alt="Conjunto Syna World Azul" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Conjunto Syna World Azul</p>
+        <span class="card-tag">Conjunto</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="conjunto">
+      <div class="img-wrap">
+        <img src="/html/img/syna/32.png" alt="Conjunto Syna World Gris" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Conjunto Syna World Gris</p>
+        <span class="card-tag">Conjunto</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="conjunto">
+      <div class="img-wrap">
+        <img src="/html/img/syna/33.png" alt="Conjunto Syna World Rojo" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Conjunto Syna World Rojo</p>
+        <span class="card-tag">Conjunto</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="conjunto">
+      <div class="img-wrap">
+        <img src="/html/img/syna/34.png" alt="Conjunto Syna World Gris" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Conjunto Syna World Gris — Var. 2</p>
+        <span class="card-tag">Conjunto</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="conjunto">
+      <div class="img-wrap">
+        <img src="/html/img/syna/35.png" alt="Conjunto Syna World Rojo 2" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Conjunto Syna World Rojo — Var. 2</p>
+        <span class="card-tag">Conjunto</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="conjunto">
+      <div class="img-wrap">
+        <img src="/html/img/syna/36.png" alt="Conjunto Syna World Largo" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Conjunto Syna World Largo</p>
+        <span class="card-tag">Conjunto</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="conjunto">
+      <div class="img-wrap">
+        <img src="/html/img/syna/37.png" alt="Conjunto Syna World Corto" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Conjunto Syna World Corto</p>
+        <span class="card-tag">Conjunto</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="conjunto">
+      <div class="img-wrap">
+        <img src="/html/img/syna/38.png" alt="Conjunto Syna World Gris" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Conjunto Syna World Gris — Var. 3</p>
+        <span class="card-tag">Conjunto</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="conjunto">
+      <div class="img-wrap">
+        <img src="/html/img/syna/39.png" alt="Conjunto Syna World Azul 2" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Conjunto Syna World Azul — Var. 2</p>
+        <span class="card-tag">Conjunto</span>
+      </div>
+    </article>
+
+    <article class="producto" data-tags="conjunto">
+      <div class="img-wrap">
+        <img src="/html/img/syna/40.png" alt="Conjuntos Syna World" loading="lazy">
+      </div>
+      <div class="card-body">
+        <p class="card-model">Conjuntos Syna World</p>
+        <span class="card-tag">Conjunto</span>
+      </div>
+    </article>
+
+    <!-- SIN RESULTADOS -->
+    <div class="no-results" id="noResults">
+      <i class="fa-solid fa-ghost"></i>
+      No hay modelos en esta categoría.
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <h3>Streetwear Store</h3>
+        <p>Syna World — La marca de Central Cee al completo. Cortavientos, sudaderas, pantalones, camisetas y conjuntos, además de colaboraciones con Nemzz, Playboy, HotWheels y más.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Enlaces</h4>
+        <ul>
+          <li>
+            <a href="https://www.instagram.com/streetwear.store01?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer">
+              <i class="fa-brands fa-instagram"></i> Instagram
+            </a>
+          </li>
+          <li>
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=streetwearstorex1@gmail.com&su=Consulta%20Streetwear" target="_blank" rel="noopener noreferrer">
+              <i class="fa-solid fa-envelope"></i> Contacto por email
+            </a>
+          </li>
+          <li>
+            <a href="/index.html">
+              <i class="fa-solid fa-arrow-up"></i> Volver al inicio
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 Streetwear Store - Syna World.</span>
+      <span style="display:flex;align-items:center;gap:6px;">
+        <span style="width:6px;height:6px;border-radius:50%;background:var(--neon-color);box-shadow:0 0 6px rgba(var(--neon-rgb),0.6);display:inline-block;"></span>
+        Tema activo
+      </span>
+    </div>
+  </footer>
+
+  <!-- BOTÓN SUBIR -->
+  <a href="#inicio" class="subir" title="Volver al inicio" aria-label="Volver al inicio">
+    <i class="fa-solid fa-chevron-up"></i>
+  </a>
+
+  <script>
+    /* ========== COLOR NEON ALEATORIO ========== */
+    (function initNeonTheme() {
+      const palettes = [
+        { color: '#39ff14', rgb: '57,255,20' },
+        { color: '#00ffff', rgb: '0,255,255' },
+        { color: '#ff003c', rgb: '255,0,60' },
+        { color: '#dbff42', rgb: '219,255,66' },
+        { color: '#ff6ec7', rgb: '255,110,199' },
+        { color: '#ff8c00', rgb: '255,140,0' },
+      ];
+      const chosen = palettes[Math.floor(Math.random() * palettes.length)];
+      document.documentElement.style.setProperty('--neon-color', chosen.color);
+      document.documentElement.style.setProperty('--neon-rgb', chosen.rgb);
+    })();
+
+    /* ========== LOADER ========== */
+    window.addEventListener('load', () => {
+      setTimeout(() => document.querySelector('.loader-screen').classList.add('hidden'), 400);
+    });
+
+    /* ========== SCROLL REVEAL ========== */
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const card = entry.target;
+          const siblings = card.parentNode.querySelectorAll('.producto');
+          let index = 0;
+          siblings.forEach((s, i) => { if (s === card) index = i; });
+          setTimeout(() => card.classList.add('visible'), index * 35);
+          revealObserver.unobserve(card);
+        }
+      });
+    }, { threshold: 0.03, rootMargin: '0px 0px -10px 0px' });
+
+    document.querySelectorAll('.producto').forEach(card => revealObserver.observe(card));
+
+    /* ========== BOTÓN SUBIR ========== */
+    const subirBtn = document.querySelector('.subir');
+    let scrollTicking = false;
+    window.addEventListener('scroll', () => {
+      if (!scrollTicking) {
+        requestAnimationFrame(() => {
+          subirBtn.classList.toggle('show', window.scrollY > 400);
+          scrollTicking = false;
+        });
+        scrollTicking = true;
+      }
+    });
+
+    /* ========== FILTROS ========== */
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const productCards = document.querySelectorAll('.producto');
+    const noResults = document.getElementById('noResults');
+    const productCount = document.getElementById('productCount');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const filter = btn.dataset.filter;
+        let visibleCount = 0;
+
+        productCards.forEach(card => {
+          const tags = card.dataset.tags || '';
+          if (filter === 'todos' || tags.includes(filter)) {
+            card.classList.remove('filtered-out');
+            visibleCount++;
+          } else {
+            card.classList.add('filtered-out');
+          }
+        });
+
+        productCount.textContent = visibleCount;
+
+        if (visibleCount === 0) {
+          noResults.classList.add('show');
+        } else {
+          noResults.classList.remove('show');
+        }
+
+        const visibleCards = document.querySelectorAll('.producto:not(.filtered-out)');
+        visibleCards.forEach((card, i) => {
+          card.classList.remove('visible');
+          setTimeout(() => card.classList.add('visible'), i * 25);
+        });
+      });
+    });
+
+    /* ========== HAMBURGUESA ========== */
+    document.getElementById('menuBtn').addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    /* ========== PARTÍCULAS ========== */
+    (function initParticles() {
+      const canvas = document.getElementById('hero-canvas');
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+      let animId;
+      const COUNT = 50;
+      let w, h;
+
+      function resize() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        w = canvas.width = rect.width;
+        h = canvas.height = rect.height;
+      }
+
+      function rgb() {
+        return getComputedStyle(document.documentElement).getPropertyValue('--neon-rgb').trim();
+      }
+
+      function create() {
+        return {
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.35,
+          vy: (Math.random() - 0.5) * 0.35,
+          r: Math.random() * 1.6 + 0.5,
+          alpha: Math.random() * 0.45 + 0.12,
+        };
+      }
+
+      function init() {
+        resize();
+        particles = [];
+        for (let i = 0; i < COUNT; i++) particles.push(create());
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, w, h);
+        const c = rgb();
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < 0 || p.x > w) p.vx *= -1;
+          if (p.y < 0 || p.y > h) p.vy *= -1;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, Math.max(0.1, p.r), 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(' + c + ',' + p.alpha + ')';
+          ctx.fill();
+        });
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const d = Math.sqrt(dx * dx + dy * dy);
+            if (d < 110) {
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.strokeStyle = 'rgba(' + c + ',' + ((1 - d / 110) * 0.1) + ')';
+              ctx.lineWidth = 0.5;
+              ctx.stroke();
+            }
+          }
+        }
+        animId = requestAnimationFrame(draw);
+      }
+
+      const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+      function handleMotion(e) {
+        if (e.matches) { cancelAnimationFrame(animId); ctx.clearRect(0, 0, w, h); }
+        else { init(); draw(); }
+      }
+      mq.addEventListener('change', handleMotion);
+      if (!mq.matches) { init(); draw(); }
+      window.addEventListener('resize', resize);
+    })();
+  </script>
 </body>
 </html>
