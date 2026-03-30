@@ -3,290 +3,950 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Catálogo de Corteiz - Streetwear Store.">
   <title>Corteiz - Streetwear Store</title>
   <link rel="icon" href="/logo.png" type="image/x-icon">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    :root { --neon-color: #39ff14; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --neon-color: #39ff14;
+      --neon-rgb: 57, 255, 20;
+      --bg-color: #050505;
+      --bg-secondary: #0a0a0a;
+      --card-color: #0d0d0d;
+      --text-color: #d4ffd4;
+      --text-muted: #6b8a6b;
+      --border-subtle: rgba(var(--neon-rgb), 0.12);
+      --font-display: 'Orbitron', sans-serif;
+      --font-mono: 'Share Tech Mono', monospace;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: var(--neon-color) var(--bg-color);
+    }
+
+    html::-webkit-scrollbar { width: 6px; }
+    html::-webkit-scrollbar-track { background: var(--bg-color); }
+    html::-webkit-scrollbar-thumb { background: var(--neon-color); border-radius: 3px; }
+
     body {
-      font-family: 'Orbitron', sans-serif;
-      background-color: #000;
-      color: var(--neon-color);
+      font-family: var(--font-mono);
+      background: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.7;
+      overflow-x: hidden;
     }
 
-    header {
-      background-color: #111;
-      padding: 30px 20px;
-      text-align: center;
-      border-bottom: 2px solid var(--neon-color);
+    body, body * {
+      transition: color 0.6s ease, border-color 0.6s ease,
+                  text-shadow 0.6s ease, box-shadow 0.6s ease;
     }
 
-    header img {
-      width: 120px;
-      margin-bottom: 10px;
+    .loader-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: var(--bg-color);
+      display: grid;
+      place-items: center;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
     }
 
-    .volver {
-      text-align: center;
-      margin: 20px;
+    .loader-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
     }
 
-    .volver a {
-      display: inline-block;
-      padding: 10px 20px;
-      background-color: var(--neon-color);
-      color: #000;
-      font-weight: bold;
+    .loader-ring {
+      width: 60px;
+      height: 60px;
+      border: 3px solid transparent;
+      border-top-color: var(--neon-color);
+      border-radius: 50%;
+      animation: loaderSpin 0.8s linear infinite;
+      box-shadow: 0 0 20px rgba(var(--neon-rgb), 0.4);
+      position: relative;
+    }
+
+    .loader-ring::after {
+      content: '';
+      position: absolute;
+      inset: 6px;
+      border: 2px solid transparent;
+      border-top-color: var(--neon-color);
+      border-radius: 50%;
+      animation: loaderSpin 1.2s linear reverse infinite;
+    }
+
+    @keyframes loaderSpin { to { transform: rotate(360deg); } }
+
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(var(--neon-rgb), 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(var(--neon-rgb), 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 900;
+      background: rgba(5, 5, 5, 0.82);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0 24px;
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       text-decoration: none;
+      color: var(--neon-color);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 1px;
+      text-shadow: 0 0 8px rgba(var(--neon-rgb), 0.5);
+      flex-shrink: 0;
+    }
+
+    .nav-logo img {
+      width: 32px;
+      height: 32px;
+      object-fit: contain;
+    }
+
+    .nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 8px 18px;
+      border: 1px solid var(--border-subtle);
       border-radius: 8px;
-      box-shadow: 0 0 10px var(--neon-color), 0 0 20px var(--neon-color);
       transition: all 0.3s ease;
     }
 
-    .volver a:hover {
-      background-color: #000;
+    .nav-back:hover,
+    .nav-back:focus-visible {
       color: var(--neon-color);
+      border-color: rgba(var(--neon-rgb), 0.4);
+      background: rgba(var(--neon-rgb), 0.05);
+      box-shadow: 0 0 14px rgba(var(--neon-rgb), 0.08);
+    }
+
+    .nav-back i {
+      font-size: 0.7rem;
+      transition: transform 0.25s ease;
+    }
+
+    .nav-back:hover i { transform: translateX(-3px); }
+
+    .nav-hamburger {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--neon-color);
+      font-size: 1.4rem;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .nav-spacer { flex: 1; }
+
+    header {
+      position: relative;
+      z-index: 1;
+      padding: 60px 20px 48px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    #hero-canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    header img.hero-logo {
+      width: 100px;
+      max-width: 100%;
+      margin-bottom: 16px;
+      filter: drop-shadow(0 0 15px rgba(var(--neon-rgb), 0.4));
+    }
+
+    header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      font-weight: 900;
+      color: var(--neon-color);
+      text-shadow:
+        0 0 10px rgba(var(--neon-rgb), 0.8),
+        0 0 30px rgba(var(--neon-rgb), 0.4),
+        0 0 60px rgba(var(--neon-rgb), 0.15);
+      margin-bottom: 6px;
+      letter-spacing: 2px;
+    }
+
+    header .hero-sub {
+      font-size: clamp(0.78rem, 1.3vw, 0.95rem);
+      color: var(--text-muted);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+
+    .hero-line {
+      width: 60px;
+      height: 2px;
+      background: var(--neon-color);
+      margin: 18px auto 0;
+      box-shadow: 0 0 10px rgba(var(--neon-rgb), 0.6);
+      border-radius: 2px;
+    }
+
+    .section-label {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 40px 20px 0;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-label span {
+      font-family: var(--font-display);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--neon-color);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      text-shadow: 0 0 8px rgba(var(--neon-rgb), 0.5);
+      white-space: nowrap;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--border-subtle), transparent);
     }
 
     .catalogo {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 25px;
-      padding: 40px;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 18px;
+      padding: 18px 20px 50px;
       max-width: 1300px;
       margin: 0 auto;
+      position: relative;
+      z-index: 1;
     }
 
     .producto {
-      background-color: #111;
-      border: 2px solid var(--neon-color);
-      border-radius: 15px;
+      background: var(--card-color);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
       overflow: hidden;
-      text-align: center;
-      padding: 10px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      opacity: 0;
+      transform: translateY(30px);
+      transition:
+        opacity 0.5s ease,
+        transform 0.5s ease,
+        box-shadow 0.35s ease,
+        border-color 0.35s ease,
+        color 0.6s ease;
     }
-    
+
+    .producto.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .producto::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      opacity: 0;
+      background: linear-gradient(135deg, rgba(var(--neon-rgb), 0.06) 0%, transparent 60%);
+      transition: opacity 0.35s ease;
+      pointer-events: none;
+      z-index: 1;
+    }
 
     .producto:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 15px var(--neon-color);
+      border-color: rgba(var(--neon-rgb), 0.5);
+      box-shadow:
+        0 8px 30px rgba(0, 0, 0, 0.5),
+        0 0 20px rgba(var(--neon-rgb), 0.1),
+        inset 0 1px 0 rgba(var(--neon-rgb), 0.1);
+      transform: translateY(-6px);
+    }
+
+    .producto.visible:hover { transform: translateY(-6px); }
+    .producto:hover::before { opacity: 1; }
+
+    .producto .img-wrap {
+      position: relative;
+      overflow: hidden;
+      background: #080808;
     }
 
     .producto img {
       width: 100%;
-      height: 200px;
+      height: 190px;
       object-fit: contain;
-      margin-bottom: 10px;
+      display: block;
+      padding: 10px;
+      transition: transform 0.5s ease, filter 0.5s ease;
     }
 
-    .producto h3 {
-      font-size: 1em;
-      margin-bottom: 5px;
-      color: var(--neon-color);
-      text-shadow: 0 0 5px var(--neon-color);
+    .producto:hover img {
+      transform: scale(1.05);
+      filter: brightness(1.12);
     }
 
-    .producto p {
-      font-size: 0.85em;
-      color: var(--neon-color);
+    .producto .card-body {
+      padding: 10px 12px 14px;
+      text-align: left;
     }
+
+    .producto .card-model {
+      font-family: var(--font-display);
+      font-size: 0.66rem;
+      font-weight: 700;
+      color: var(--text-color);
+      letter-spacing: 0.5px;
+      line-height: 1.45;
+    }
+
+    .producto .card-tag {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 0.52rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--neon-color);
+      border: 1px solid rgba(var(--neon-rgb), 0.2);
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(var(--neon-rgb), 0.04);
+    }
+
+    .catalogo-info {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 0 20px;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .catalogo-info span {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+    }
+
+    .catalogo-info span strong { color: var(--neon-color); }
 
     footer {
-      background-color: #111;
-      color: var(--neon-color);
-      text-align: center;
-      padding: 20px;
-      font-size: 0.9em;
-      border-top: 2px solid var(--neon-color);
+      position: relative;
+      z-index: 1;
+      margin-top: 40px;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-secondary);
     }
 
-    .social a {
-      margin: 0 10px;
-      color: var(--neon-color);
-      text-decoration: none;
-      font-size: 1.2em;
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
     }
+
+    .footer-brand h3 {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--neon-color);
+      text-shadow: 0 0 8px rgba(var(--neon-rgb), 0.4);
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+    }
+
+    .footer-brand p {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      line-height: 1.8;
+    }
+
+    .footer-links h4 {
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .footer-links ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.25s ease;
+    }
+
+    .footer-links a:hover,
+    .footer-links a:focus-visible { color: var(--neon-color); }
+    .footer-links a i { font-size: 0.9rem; width: 18px; text-align: center; }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 18px 20px 22px;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
     .subir {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background-color: #111;
-      border: 2px solid var(--neon-color);
+      bottom: 24px;
+      right: 24px;
+      background: rgba(13, 13, 13, 0.9);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(var(--neon-rgb), 0.3);
       color: var(--neon-color);
-      font-size: 1.5em;
-      padding: 10px 15px;
-      border-radius: 50%;
+      font-size: 1rem;
+      width: 46px;
+      height: 46px;
+      border-radius: 10px;
       text-decoration: none;
-      text-align: center;
-      box-shadow: 0 0 10px var(--neon-color);
-      transition: transform 0.3s;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s ease, transform 0.3s ease,
+                  border-color 0.3s ease, box-shadow 0.3s ease, color 0.6s ease;
+      z-index: 800;
+      pointer-events: none;
     }
 
+    .subir.show { opacity: 1; transform: translateY(0); pointer-events: all; }
+    .subir:hover { border-color: var(--neon-color); box-shadow: 0 0 20px rgba(var(--neon-rgb), 0.25); }
+
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid var(--neon-color);
+      outline-offset: 3px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+      .producto { opacity: 1; transform: none; }
+    }
+
+    @media (max-width: 768px) {
+      .nav-back { display: none; }
+      .nav-hamburger { display: block; }
+      .mobile-back { display: flex !important; }
+      .catalogo { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; padding: 14px 12px 36px; }
+      .producto img { height: 160px; padding: 8px; }
+      .producto .card-body { padding: 8px 9px 10px; }
+      .producto .card-model { font-size: 0.58rem; line-height: 1.4; }
+      .producto .card-tag { font-size: 0.48rem; padding: 1px 6px; margin-top: 5px; }
+      .footer-inner { grid-template-columns: 1fr; gap: 28px; padding: 32px 20px 18px; }
+      .footer-bottom { flex-direction: column; gap: 6px; text-align: center; }
+      header { padding: 50px 16px 36px; }
+    }
+
+    @media (max-width: 400px) {
+      .catalogo { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .mobile-back {
+      display: none;
+      justify-content: center;
+      padding: 14px 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .mobile-back a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 10px 20px;
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .mobile-back a:hover {
+      color: var(--neon-color);
+      border-color: rgba(var(--neon-rgb), 0.4);
+      background: rgba(var(--neon-rgb), 0.05);
+    }
   </style>
-  <script>
-    const neonColors = ['#39ff14', '#00ffff', '#ff003c', '#DBFF42'];
-    const randomColor = neonColors[Math.floor(Math.random() * neonColors.length)];
-    document.documentElement.style.setProperty('--neon-color', randomColor);
-  </script>
 </head>
-<body>
+
 <body id="inicio">
-<header>
-  <img src="/img_index/logo_corteiz.png">
-</header>
-<div class="volver">
-  <a href="/index.html">⬅ Volver al inicio</a>
-</div>
 
-<section class="catalogo">
-  <div class="producto">
-    <img src="/html/img/corteiz/1.png"><h3>Camiseta Corteiz</h3>
+  <div class="loader-screen" aria-hidden="true">
+    <div class="loader-ring"></div>
   </div>
-  <div class="producto">
-  <img src="/html/img/corteiz/2.png"><h3>Camiseta Corteiz Brasil </h3>
-  </div>
-  <div class="producto">
- <img src="/html/img/corteiz/3.png"><h3>Camiseta Corteiz Brasil 2 </h3>
-  </div>
- <div class="producto">
- <img src="/html/img/corteiz/4.png"><h3>Camiseta Corteiz Alemania</h3>
-  </div>    
-  <div class="producto">
-<img src="/html/img/corteiz/5.png"><h3>Camiseta Futbol Corteiz</h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/corteiz/6.png"><h3>Camiseta Futbol Corteiz 2</h3>
-  </div>
-    <div class="producto">
-<img src="/html/img/corteiz/7.png"><h3>Camiseta "C-star" Negro</h3>
+
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <nav role="navigation" aria-label="Navegación principal">
+    <div class="nav-inner">
+      <a href="/index.html" class="nav-logo">
+        <img src="/logo.png" alt="Logo Streetwear Store">
+        <span>SWS</span>
+      </a>
+      <div class="nav-spacer"></div>
+      <a href="/index.html" class="nav-back">
+        <i class="fa-solid fa-arrow-left"></i>
+        Volver al inicio
+      </a>
+      <button class="nav-hamburger" aria-label="Abrir menú" id="menuBtn">
+        <i class="fa-solid fa-bars"></i>
+      </button>
     </div>
-  <div class="producto">
-<img src="/html/img/corteiz/8.png"><h3>Camiseta "C-star" Blanco</h3>
-</div>
-<div class="producto">
-<img src="/html/img/corteiz/9.png"><h3>Camiseta Corteiz "Heart"</h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/corteiz/10.png"><h3>Camiseta Corteiz "Alcatraz"</h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/corteiz/11.png"><h3>Camiseta Corteiz "NO TIME 4 LUV"</h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/corteiz/12.png"><h3>Camiseta Corteiz x Central Cee </h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/corteiz/13.png"><h3>Camiseta Corteiz  "Rules in the World"</h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/corteiz/14.png"><h3>Camiseta Corteiz x Central Cee </h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/corteiz/15.png"><h3>Pantalones Corteiz</h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/corteiz/16.png"><h3>Cargo Corteiz Negro </h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/corteiz/17.png"><h3>Cargo Corteiz Beige </h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/corteiz/18.png"><h3>Cargo Corteiz Gris </h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/corteiz/19.png"><h3>Baggy shorts Corteiz </h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/corteiz/20.png"><h3>Corteiz Windbreaker</h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/corteiz/21.png"><h3>Corteiz Conjuntos</h3>
-  </div>
-    <div class="producto">
-<img src="/html/img/corteiz/22.png"><h3>Corteiz Conjunto Brasil </h3>
-  </div>
-   <div class="producto">
-<img src="/html/img/corteiz/23.png"><h3>Corteiz Conjunto Brasil 2 </h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/corteiz/24.png"><h3>Corteiz Chaquetas </h3>
-  </div>
-    <div class="producto">
-<img src="/html/img/corteiz/25.png"><h3>Corteiz Chaquetas </h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/corteiz/26.png"><h3>Corteiz Conjunto Italia </h3>
-  </div>
-    <div class="producto">
-<img src="/html/img/corteiz/27.png"><h3>Corteiz Conjuntos</h3>
-  </div>
-    <div class="producto">
-<img src="/html/img/corteiz/28.png"><h3>Corteiz Chaqueta Rules the World</h3>
-  </div>
-    <div class="producto">
-<img src="/html/img/corteiz/29.png"><h3>Corteiz Conjuntos</h3>
-  </div>
-   <div class="producto">
-<img src="/html/img/corteiz/30.png"><h3>Corteiz Chaqueta de cuero</h3>
-  </div>
- <div class="producto">
-<img src="/html/img/corteiz/31.png"><h3>Corteiz Chalecos</h3>
-  </div>
-   <div class="producto">
-<img src="/html/img/corteiz/32.png"><h3>Corteiz Pantalones Cortos</h3>
-  </div>
-   <div class="producto">
-<img src="/html/img/corteiz/33.png"><h3>Corteiz Chaquetas</h3>
-  </div>
-    <div class="producto">
-<img src="/html/img/corteiz/34.png"><h3>Corteiz Cargo Gris</h3>
-  </div>
-    <div class="producto">
-<img src="/html/img/corteiz/35.png"><h3>Corteiz Cargo Negro</h3>
-  </div>
-   <div class="producto">
-<img src="/html/img/corteiz/36.png"><h3>Corteiz Cargo Morado</h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/corteiz/37.png"><h3>Corteiz Cargo Amarillo</h3>
-  </div>
-   <div class="producto">
-<img src="/html/img/corteiz/38.png"><h3>Corteiz Cargo Rojo</h3>
-  </div>
-   <div class="producto">
-<img src="/html/img/corteiz/39.png"><h3>Corteiz Cargo Verde</h3>
-  </div>
-   <div class="producto">
-<img src="/html/img/corteiz/40.png"><h3>Corteiz Cargo Militar</h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/corteiz/41.png"><h3>Corteiz Jersey "C - STAR"</h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/corteiz/42.png"><h3>Corteiz Cazadora Blanca</h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/corteiz/43.png"><h3>Corteiz Jersey Militar</h3>
-  </div>
-   <div class="producto">
-<img src="/html/img/corteiz/44.png"><h3>Corteiz Cazadora Azul</h3>
-  </div>
-  <div class="producto">
-<img src="/html/img/corteiz/45.png"><h3>Corteiz Chaqueta Denim</h3>
-  </div>
-    <!-- Agrega más productos aquí siguiendo la misma estructura -->
-</section>
+  </nav>
 
-<footer>
-  <p>&copy; 2025 Streetwear Store - Corteiz.</p>
-  <div class="social">
-    <a href="https://www.instagram.com/streetwear.store01?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank">Instagram</a>
-      <a href="https://mail.google.com/mail/?view=cm&fs=1&to=streetwearstorex1@gmail.com&su=Consulta%20Streetwear" target="_blank">Contacto</a>
+  <div class="mobile-back">
+    <a href="/index.html">
+      <i class="fa-solid fa-arrow-left"></i>
+      Volver al inicio
+    </a>
   </div>
-</footer>
-  <!-- Flecha para subir -->
-  <a href="#inicio" class="subir" title="Volver al inicio">&#8679;</a>
+
+  <header>
+    <canvas id="hero-canvas" aria-hidden="true"></canvas>
+    <div class="hero-content">
+      <img class="hero-logo" src="/img_index/logo_corteiz.png" alt="Logo Corteiz">
+      <h1>Corteiz</h1>
+      <p class="hero-sub">Ropa &middot; Cargos &middot; Chaquetas &middot; 45 prendas</p>
+      <div class="hero-line" aria-hidden="true"></div>
+    </div>
+  </header>
+
+  <div class="section-label">
+    <span>Prendas disponibles</span>
+  </div>
+  <div class="catalogo-info">
+    <span><strong>45</strong> prendas en catalogo</span>
+  </div>
+
+  <section class="catalogo" aria-label="Corteiz">
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/1.png" alt="Camiseta Corteiz" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Camiseta Corteiz</p><span class="card-tag">Camiseta</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/2.png" alt="Brasil" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Camiseta Corteiz Brasil</p><span class="card-tag">Brasil</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/3.png" alt="Brasil 2" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Camiseta Corteiz Brasil 2</p><span class="card-tag">Brasil</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/4.png" alt="Alemania" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Camiseta Corteiz Alemania</p><span class="card-tag">Alemania</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/5.png" alt="Futbol" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Camiseta Futbol Corteiz</p><span class="card-tag">Futbol</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/6.png" alt="Futbol 2" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Camiseta Futbol Corteiz 2</p><span class="card-tag">Futbol</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/7.png" alt="C-Star Negro" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Camiseta "C-star" Negro</p><span class="card-tag">C-Star</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/8.png" alt="C-Star Blanco" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Camiseta "C-star" Blanco</p><span class="card-tag">C-Star</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/9.png" alt="Heart" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Camiseta Corteiz "Heart"</p><span class="card-tag">Heart</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/10.png" alt="Alcatraz" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Camiseta Corteiz "Alcatraz"</p><span class="card-tag">Alcatraz</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/11.png" alt="NO TIME 4 LUV" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Camiseta Corteiz "NO TIME 4 LUV"</p><span class="card-tag">NO TIME 4 LUV</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/12.png" alt="Central Cee" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Camiseta Corteiz x Central Cee</p><span class="card-tag">Central Cee</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/13.png" alt="Rules the World" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Camiseta Corteiz "Rules in the World"</p><span class="card-tag">Rules World</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/14.png" alt="Central Cee 2" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Camiseta Corteiz x Central Cee</p><span class="card-tag">Central Cee</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/15.png" alt="Pantalones" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Pantalones Corteiz</p><span class="card-tag">Pantalones</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/16.png" alt="Cargo Negro" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Cargo Corteiz Negro</p><span class="card-tag">Cargo</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/17.png" alt="Cargo Beige" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Cargo Corteiz Beige</p><span class="card-tag">Cargo</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/18.png" alt="Cargo Gris" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Cargo Corteiz Gris</p><span class="card-tag">Cargo</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/19.png" alt="Baggy Shorts" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Baggy shorts Corteiz</p><span class="card-tag">Shorts</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/20.png" alt="Windbreaker" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Corteiz Windbreaker</p><span class="card-tag">Windbreaker</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/21.png" alt="Conjunto" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Corteiz Conjuntos</p><span class="card-tag">Conjunto</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/22.png" alt="Conjunto Brasil" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Corteiz Conjunto Brasil</p><span class="card-tag">Brasil</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/23.png" alt="Conjunto Brasil 2" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Corteiz Conjunto Brasil 2</p><span class="card-tag">Brasil</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/24.png" alt="Chaquetas" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Corteiz Chaquetas</p><span class="card-tag">Chaqueta</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/25.png" alt="Chaquetas 2" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Corteiz Chaquetas</p><span class="card-tag">Chaqueta</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/26.png" alt="Conjunto Italia" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Corteiz Conjunto Italia</p><span class="card-tag">Italia</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/27.png" alt="Conjuntos 2" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Corteiz Conjuntos</p><span class="card-tag">Conjunto</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/28.png" alt="Rules the World" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Corteiz Chaqueta Rules the World</p><span class="card-tag">Rules World</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/29.png" alt="Conjuntos 3" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Corteiz Conjuntos</p><span class="card-tag">Conjunto</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/30.png" alt="Cuero" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Corteiz Chaqueta de cuero</p><span class="card-tag">Cuero</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/31.png" alt="Chalecos" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Corteiz Chalecos</p><span class="card-tag">Chaleco</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/32.png" alt="Pantalones Cortos" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Corteiz Pantalones Cortos</p><span class="card-tag">Shorts</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/33.png" alt="Chaquetas 3" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Corteiz Chaquetas</p><span class="card-tag">Chaqueta</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/34.png" alt="Cargo Gris 2" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Corteiz Cargo Gris</p><span class="card-tag">Cargo</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/35.png" alt="Cargo Negro 2" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Corteiz Cargo Negro</p><span class="card-tag">Cargo</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/36.png" alt="Cargo Morado" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Corteiz Cargo Morado</p><span class="card-tag">Cargo</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/37.png" alt="Cargo Amarillo" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Corteiz Cargo Amarillo</p><span class="card-tag">Cargo</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/38.png" alt="Cargo Rojo" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Corteiz Cargo Rojo</p><span class="card-tag">Cargo</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/39.png" alt="Cargo Verde" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Corteiz Cargo Verde</p><span class="card-tag">Cargo</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/40.png" alt="Cargo Militar" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Corteiz Cargo Militar</p><span class="card-tag">Militar</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/41.png" alt="Jersey C-STAR" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Corteiz Jersey "C-STAR"</p><span class="card-tag">C-Star</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/42.png" alt="Cazadora Blanca" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Corteiz Cazadora Blanca</p><span class="card-tag">Cazadora</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/43.png" alt="Jersey Militar" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Corteiz Jersey Militar</p><span class="card-tag">Militar</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/44.png" alt="Cazadora Azul" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Corteiz Cazadora Azul</p><span class="card-tag">Cazadora</span></div>
+    </article>
+    <article class="producto">
+      <div class="img-wrap"><img src="/html/img/corteiz/45.png" alt="Denim" loading="lazy"></div>
+      <div class="card-body"><p class="card-model">Corteiz Chaqueta Denim</p><span class="card-tag">Denim</span></div>
+    </article>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <h3>Streetwear Store</h3>
+        <p>Corteiz — Camisetas, cargos, chaquetas, conjuntos y mas.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Enlaces</h4>
+        <ul>
+          <li>
+            <a href="https://www.instagram.com/streetwear.store01?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" rel="noopener noreferrer">
+              <i class="fa-brands fa-instagram"></i> Instagram
+            </a>
+          </li>
+          <li>
+            <a href="https://mail.google.com/mail/?view=cm&fs=1&to=streetwearstorex1@gmail.com&su=Consulta%20Streetwear" target="_blank" rel="noopener noreferrer">
+              <i class="fa-solid fa-envelope"></i> Contacto por email
+            </a>
+          </li>
+          <li>
+            <a href="/index.html">
+              <i class="fa-solid fa-arrow-up"></i> Volver al inicio
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 Streetwear Store - Corteiz.</span>
+      <span style="display:flex;align-items:center;gap:6px;">
+        <span style="width:6px;height:6px;border-radius:50%;background:var(--neon-color);box-shadow:0 0 6px rgba(var(--neon-rgb),0.6);display:inline-block;"></span>
+        Tema activo
+      </span>
+    </div>
+  </footer>
+
+  <a href="#inicio" class="subir" title="Volver al inicio" aria-label="Volver al inicio">
+    <i class="fa-solid fa-chevron-up"></i>
+  </a>
+
+  <script>
+    (function initNeonTheme() {
+      const palettes = [
+        { color: '#39ff14', rgb: '57,255,20' },
+        { color: '#00ffff', rgb: '0,255,255' },
+        { color: '#ff003c', rgb: '255,0,60' },
+        { color: '#dbff42', rgb: '219,255,66' },
+        { color: '#ff6ec7', rgb: '255,110,199' },
+        { color: '#ff8c00', rgb: '255,140,0' },
+      ];
+      const chosen = palettes[Math.floor(Math.random() * palettes.length)];
+      document.documentElement.style.setProperty('--neon-color', chosen.color);
+      document.documentElement.style.setProperty('--neon-rgb', chosen.rgb);
+    })();
+
+    window.addEventListener('load', () => {
+      setTimeout(() => document.querySelector('.loader-screen').classList.add('hidden'), 400);
+    });
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const card = entry.target;
+          const siblings = card.parentNode.querySelectorAll('.producto');
+          let index = 0;
+          siblings.forEach((s, i) => { if (s === card) index = i; });
+          setTimeout(() => card.classList.add('visible'), index * 35);
+          revealObserver.unobserve(card);
+        }
+      });
+    }, { threshold: 0.04, rootMargin: '0px 0px -10px 0px' });
+
+    document.querySelectorAll('.producto').forEach(card => revealObserver.observe(card));
+
+    const subirBtn = document.querySelector('.subir');
+    let scrollTicking = false;
+    window.addEventListener('scroll', () => {
+      if (!scrollTicking) {
+        requestAnimationFrame(() => {
+          subirBtn.classList.toggle('show', window.scrollY > 400);
+          scrollTicking = false;
+        });
+        scrollTicking = true;
+      }
+    });
+
+    (function initParticles() {
+      const canvas = document.getElementById('hero-canvas');
+      const ctx = canvas.getContext('2d');
+      let particles = [];
+      let animId;
+      const COUNT = 40;
+      let w, h;
+
+      function resize() {
+        const rect = canvas.parentElement.getBoundingClientRect();
+        w = canvas.width = rect.width;
+        h = canvas.height = rect.height;
+      }
+
+      function rgb() {
+        return getComputedStyle(document.documentElement).getPropertyValue('--neon-rgb').trim();
+      }
+
+      function create() {
+        return {
+          x: Math.random() * w,
+          y: Math.random() * h,
+          vx: (Math.random() - 0.5) * 0.35,
+          vy: (Math.random() - 0.5) * 0.35,
+          r: Math.random() * 1.6 + 0.5,
+          alpha: Math.random() * 0.45 + 0.12,
+        };
+      }
+
+      function init() {
+        resize();
+        particles = [];
+        for (let i = 0; i < COUNT; i++) particles.push(create());
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, w, h);
+        const c = rgb();
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < 0 || p.x > w) p.vx *= -1;
+          if (p.y < 0 || p.y > h) p.vy *= -1;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, Math.max(0.1, p.r), 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(' + c + ',' + p.alpha + ')';
+          ctx.fill();
+        });
+        for (let i = 0; i < particles.length; i++) {
+          for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const d = Math.sqrt(dx * dx + dy * dy);
+            if (d < 110) {
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.strokeStyle = 'rgba(' + c + ',' + ((1 - d / 110) * 0.1) + ')';
+              ctx.lineWidth = 0.5;
+              ctx.stroke();
+            }
+          }
+        }
+        animId = requestAnimationFrame(draw);
+      }
+
+      const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+      function handleMotion(e) {
+        if (e.matches) { cancelAnimationFrame(animId); ctx.clearRect(0, 0, w, h); }
+        else { init(); draw(); }
+      }
+      mq.addEventListener('change', handleMotion);
+      if (!mq.matches) { init(); draw(); }
+      window.addEventListener('resize', resize);
+    })();
+  </script>
 </body>
 </html>
