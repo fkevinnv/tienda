@@ -508,7 +508,7 @@
      *  búsqueda local automática como fallback.
      * ─────────────────────────────────────────────────
      */
-    var N8N_WEBHOOK_URL = 'TU_WEBHOOK_AQUI';
+    var N8N_WEBHOOK_URL = 'http://localhost:5678/webhook/chat-assistant';
 
     var CONTACT_URL = 'https://mail.google.com/mail/?view=cm&fs=1&to=streetwearstorex1@gmail.com&su=Consulta%20Streetwear';
     var INSTAGRAM_URL = 'https://www.instagram.com/streetwear.store01';
@@ -590,7 +590,7 @@
     }
 
     function processMessage(text){
-      if(N8N_WEBHOOK_URL !== 'TU_WEBHOOK_AQUI'){
+      if(N8N_WEBHOOK_URL !== 'http://localhost:5678/webhook/chat-assistant'){
         callN8N(text).then(function(reply){
           removeTyping();
           appendMessage('bot', reply);
@@ -750,7 +750,7 @@
       return now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
     }
 
-    if(N8N_WEBHOOK_URL === 'TU_WEBHOOK_AQUI'){
+    if(N8N_WEBHOOK_URL === 'http://localhost:5678/webhook/chat-assistant'){
       chatOfflineNote.textContent = 'Modo local: busqueda rapida sin conexion a IA';
     }
   </script>
