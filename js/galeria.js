@@ -2,11 +2,17 @@
  * Galería de producto: al pulsar una tarjeta (.producto) se abre una vista
  * ampliada con carrusel de fotos.
  *
+ * Las tarjetas de los menús (las que contienen un enlace <a href>) se ignoran,
+ * para que sigan navegando a su página.
+ *
  * Fotos extra (opcional): atributo data-imagenes en el <article>, con las
  * rutas separadas por comas. La imagen de la tarjeta es siempre la primera.
  */
 (function () {
-  const tarjetas = document.querySelectorAll('.producto');
+  const tarjetas = Array.prototype.filter.call(
+    document.querySelectorAll('.producto'),
+    function (tarjeta) { return !tarjeta.querySelector('a[href]'); }
+  );
   if (!tarjetas.length) return;
 
   // ---------- Estructura del modal ----------
@@ -132,6 +138,7 @@
 
   // ---------- Eventos ----------
   tarjetas.forEach(function (tarjeta) {
+    tarjeta.classList.add('con-galeria');
     tarjeta.tabIndex = 0;
     tarjeta.setAttribute('role', 'button');
     tarjeta.addEventListener('click', function () { abrir(tarjeta); });
