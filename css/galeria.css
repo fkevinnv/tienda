@@ -1,8 +1,8 @@
 /* ===== GALERÍA DE PRODUCTO (modal + carrusel) ===== */
 
-.producto { cursor: pointer; }
+.producto.con-galeria { cursor: pointer; }
 
-.producto:focus-visible {
+.producto.con-galeria:focus-visible {
   outline: 2px solid var(--neon-color);
   outline-offset: 3px;
 }
